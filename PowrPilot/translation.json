@@ -1,0 +1,18 @@
+{
+	"translations": {
+		"de": {
+			"PowrPilot": "PowrPilot",
+
+			"__elements__": "",
+
+			"__variables__": "",
+
+			"Last measurement": "letzte Messung",
+			"Uptime": "Uptime",
+			"wifi-signal": "Wifi-Signal",
+			"Last update": "letzte Aktualisierung",
+
+			"__end__": ""
+		}
+	}
+}

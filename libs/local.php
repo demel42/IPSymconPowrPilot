@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-trait ModuleTemplateLocalLib
+trait PowrPilotLocalLib
 {
     private function GetFormStatus()
     {
@@ -34,5 +34,11 @@ trait ModuleTemplateLocalLib
         if ($reInstall) {
             $this->SendDebug(__FUNCTION__, 'reInstall=' . $this->bool2str($reInstall), 0);
         }
+
+        $this->CreateVarProfile('PowrPilot.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity', [], $reInstall);
+        $this->CreateVarProfile('PowrPilot.sec', VARIABLETYPE_INTEGER, ' s', 0, 0, 0, 0, 'Clock', [], $reInstall);
+
+        $this->CreateVarProfile('PowrPilot.KWh', VARIABLETYPE_FLOAT, ' KWh', 0, 0, 0, 1, '', [], $reInstall);
+        $this->CreateVarProfile('PowrPilot.KW', VARIABLETYPE_FLOAT, ' KW', 0, 0, 0, 1, '', [], $reInstall);
     }
 }

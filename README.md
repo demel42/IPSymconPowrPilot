@@ -1,3 +1,5 @@
+# IPSymconPowrPilot
+
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-6.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -16,58 +18,118 @@
 
 ## 1. Funktionsumfang
 
+Übernahme der Daten von dem "do it yourself" Smartmeter-Interface _PowrPilot_ von ([stall.biz](https://www.stall.biz/project/der-powrpilot-stromzaehler-smartmeter-interface-fuer-die-hausautomation)).
+
+Getestet mit der PowrPilot-Version **34**.
+
 ## 2. Voraussetzungen
 
-- IP-Symcon ab Version 6.0
+ - IP-Symcon ab Version 6.0
+ - ein PowrPilot-Zählermodul
 
 ## 3. Installation
 
-### a. Installation des Moduls
+### a. Laden des Moduls
 
-Im [Module Store](https://www.symcon.de/service/dokumentation/komponenten/verwaltungskonsole/module-store/) ist das Modul unter dem Suchbegriff *ModuleTemplate* zu finden.<br>
-Alternativ kann das Modul über [Module Control](https://www.symcon.de/service/dokumentation/modulreferenz/module-control/) unter Angabe der URL `https://github.com/demel42/ModuleTemplate.git` installiert werden.
+Die Webconsole von IP-Symcon mit _http://\<IP-Symcon IP\>:3777/console/_ öffnen.
 
-### b. Einrichtung in IPS
+Anschließend oben rechts auf das Symbol für den Modulstore (IP-Symcon > 5.1) klicken
+
+![Store](docs/de/img/store_icon.png?raw=true "open store")
+
+Im Suchfeld nun _PowrPilot_ eingeben, das Modul auswählen und auf _Installieren_ drücken.
+
+#### Alternatives Installieren über Modules Instanz (IP-Symcon < 5.1)
+
+Die Webconsole von IP-Symcon mit _http://\<IP-Symcon IP\>:3777/console/_ aufrufen.
+
+Anschließend den Objektbaum _öffnen_.
+
+![Objektbaum](docs/de/img/objektbaum.png?raw=true "Objektbaum")
+
+Die Instanz _Modules_ unterhalb von Kerninstanzen im Objektbaum von IP-Symcon mit einem Doppelklick öffnen und das  _Plus_ Zeichen drücken.
+
+![Modules](docs/de/img/Modules.png?raw=true "Modules")
+
+![Plus](docs/de/img/plus.png?raw=true "Plus")
+
+![ModulURL](docs/de/img/add_module.png?raw=true "Add Module")
+
+Im Feld die folgende URL eintragen und mit _OK_ bestätigen:
+
+```
+https://github.com/demel42/IPSymconPowrPilot.git
+```
+
+Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Modules_.
+
+### b. Einrichtung des Geräte-Moduls
+
+In IP-Symcon nun unterhalb des Wurzelverzeichnisses die Funktion _Instanz hinzufügen_ (_CTRL+1_) auswählen, als Hersteller _stall.biz_ und als Gerät _PowrPilot_ auswählen.
+Es wird automatisch eine I/O-Instanz vom Type Server-Socket angelegt und das Konfigurationsformular dieser Instanz geöffnet.
+
+Hier die Portnummer eintragen, an die der PowrPilot Daten schicken soll und die Instanz aktiv schalten.
+
+In dem Konfigurationsformular der PowrPilot-Instanz kann man konfigurieren, welche Variablen übernommen werden sollen.
+
+### c. Anpassung des PowrPilot
+
+Der PowrPilot muss in zwei Punkten angepaast werden
+
+- Einrichten der IP von IP-Symcon
+```
+http://<ip des PowrPilot>/?ccu:<ip von IPS>:
+```
+- aktivieren der automatischen Übertragung
+```
+http://<ip des PowrPilot>/?param:12:<port von IPS>:
+```
+damit schickt der PowrPilot zyklisch die Daten.
+
+Gemäß der Dokumentation sind die 4 Zähler im PowrPilot zu konfigurieren (_Modus_ und _Impuls/Einheit_) sowie ggfs der aktuelle Wert des Zählers einzustellen.
 
 ## 4. Funktionsreferenz
 
-alle Funktionen sind über _RequestAction_ der jew. Variablen ansteuerbar
-
 ## 5. Konfiguration
-
-### ModuleTemplate Device
 
 #### Properties
 
-| Eigenschaft               | Typ      | Standardwert | Beschreibung |
-| :------------------------ | :------  | :----------- | :----------- |
-| Instanz deaktivieren      | boolean  | false        | Instanz temporär deaktivieren |
-|                           |          |              | |
+| Eigenschaft                           | Typ      | Standardwert | Beschreibung |
+| :------------------------------------ | :------  | :----------- | :----------- |
+| Zähler 1                              | integer  | -1           | Typ des 1. Zählers |
+| Zähler 2                              | integer  | -1           | Typ des 2. Zählers |
+| Zähler 3                              | integer  | -1           | Typ des 3. Zählers |
+| Zähler 4                              | integer  | -1           | Typ des 4. Zählers |
 
-#### Aktionen
+| Typ          | Wert |
+| :----------- | :--- |
+| undefiniert  | -1 |
+| Elektrizität | 0 |
+| Gas          | 1 |
+| Wasser       | 2 |
 
-| Bezeichnung                | Beschreibung |
-| :------------------------- | :----------- |
+In Abhängigkeit von dem ṮTyp_ werden jeweils 2 Variablen angelegt mit dem entsprechenden Datentyp, jeweils ein Zähler und eine Angabe der aktuellen Leistung/Verbrauch.
+Falls man die Werte archivieren möchte, ist sinnvollerweise die _Aggregation_ auf _Zähler_ einzustellen.
 
-### Variablenprofile
+#### Variablenprofile
 
 Es werden folgende Variablenprofile angelegt:
-* Boolean<br>
 * Integer<br>
+PowrPilot.sec,
+PowrPilot.Wifi
+
 * Float<br>
-* String<br>
+PowrPilot.KW,
+PowrPilot.KWh,
 
 ## 6. Anhang
 
-### GUIDs
-- Modul: `{0DCE4B6F-9176-DC9A-5502-1AF2B7573EB5}`
+GUIDs
+- Modul: `{3EAACC75-ADCF-AC0E-C663-768ED814A722}`
 - Instanzen:
-  - ModuleTemplateDevice: `{B052AEAB-2687-02EB-DF40-74191E242A0B}`
-- Nachrichten:
-
-### Quellen
+  - PowrPilot: `{0003E135-D3AE-16BD-AA4B-753FACFC58A1}`
 
 ## 7. Versions-Historie
 
-- 0.9 @ dd.mm.yyyy HH:MM (beta)
-  - Initiale Version
+- 1.0 @ 08.02.2023 16:52
+  - initiale Version
