@@ -20,7 +20,7 @@
 
 Übernahme der Daten von dem "do it yourself" Smartmeter-Interface _PowrPilot_ von ([stall.biz](https://www.stall.biz/project/der-powrpilot-stromzaehler-smartmeter-interface-fuer-die-hausautomation)).
 
-Getestet mit der PowrPilot-Version **34**.
+Getestet mit der PowrPilot-Version **17**.
 
 ## 2. Voraussetzungen
 
@@ -131,5 +131,5 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.0 @ 08.02.2023 16:52
+- 1.0 @ 09.02.2023 14:43
   - initiale Version

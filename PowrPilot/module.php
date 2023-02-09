@@ -53,6 +53,14 @@ class PowrPilot extends IPSModule
 
         $vpos = 1;
 
+        $this->MaintainVariable('PurchasePower', $this->Translate('Energy purchase'), VARIABLETYPE_FLOAT, 'PowrPilot.KWh', $vpos++, true);
+        $this->MaintainVariable('PurchaseEnergy', $this->Translate('Power purchase'), VARIABLETYPE_FLOAT, 'PowrPilot.KW', $vpos++, true);
+
+        $this->MaintainVariable('DeliveryPower', $this->Translate('Energy delivery'), VARIABLETYPE_FLOAT, 'PowrPilot.KWh', $vpos++, true);
+        $this->MaintainVariable('DeliveryEnergy', $this->Translate('Power delivery'), VARIABLETYPE_FLOAT, 'PowrPilot.KW', $vpos++, true);
+
+        $this->MaintainVariable('Switch', $this->Translate('Switching output'), VARIABLETYPE_BOOLEAN, 'PowrPilot.Switch', $vpos++, true);
+
         $vpos = 100;
 
         $this->MaintainVariable('LastMeasurement', $this->Translate('Last measurement'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, true);
@@ -178,9 +186,6 @@ class PowrPilot extends IPSModule
 
     private function ProcessData($jdata)
     {
-        $data = '{"modultyp":"PowrPilot","vars":[{"name":"0","homematic_name":"pp_counterIP","desc":"ip des powrpilots","type":"string","unit":"","value":"192.168.178.89"},{"name":"11","homematic_name":"pp_kwh_bezug","desc":"kwh_bezug","type":"number","unit":"KWh","value":1732.000},{"name":"12","homematic_name":"pp_kw_bezug","desc":"kw_bezug","type":"number","unit":"KW","value":0.000},{"name":"13","homematic_name":"pp_kwh_abgabe","desc":"kwh_abgabe","type":"number","unit":"KWh","value":207.000},{"name":"14","homematic_name":"pp_kw_abgabe","desc":"kw_abgabe","type":"number","unit":"KW","value":0.000},{"name":"15","homematic_name":"pp_d0_status","desc":"d0_status","type":"boolean","unit":" ","value":false}],"Systeminfo":{"MAC-Adresse":"58:bf:25:d9:d3:8d","Homematic_CCU_ip":"192.168.178.72","WLAN_ssid":"thermaqua","WLAN_Signal_dBm":"-70","sec_seit_reset":"73411","zeitpunkt":"2023.02.08 /14h01","firmware":"powrpilot_17"}}';
-        $jdata = json_decode($data, true);
-
         $this->SendDebug(__FUNCTION__, 'data=' . print_r($jdata, true), 0);
 
         $modultyp = $this->GetArrayElem($jdata, 'modultyp', '');
@@ -205,40 +210,44 @@ class PowrPilot extends IPSModule
 
         $this->SendDebug(__FUNCTION__, 'modultyp=' . $modultyp . ', measure=' . date('d.m.Y H:i:s', $tstamp) . ', rssi=' . $rssi . ', uptime=' . $uptime . 's', 0);
 
+        $name2ident = [
+            'pp_kwh_bezug'  => 'PurchasePower',
+            'pp_kw_bezug'   => 'PurchaseEnergy',
+            'pp_kwh_abgabe' => 'DeliveryPower',
+            'pp_kw_abgabe'  => 'DeliveryEnergy',
+            'pp_d0_status'  => 'Switch',
+        ];
+
         $vars = $this->GetArrayElem($jdata, 'vars', '');
         $this->SendDebug(__FUNCTION__, 'vars=' . print_r($vars, true), 0);
         foreach ($vars as $var) {
-            $ident = $this->GetArrayElem($var, 'homematic_name', '');
+            $name = $this->GetArrayElem($var, 'homematic_name', '');
             $value = $this->GetArrayElem($var, 'value', '');
 
             $found = false;
             $skip = false;
 
+            if (isset($name2ident[$name])) {
+                $ident = $name2ident[$name];
+                if (in_array((string) $value, ['', 'inf', 'nan'])) {
+                    $skip = true;
+                } else {
+                    $this->SetValue($ident, $value);
+                }
+                $found = true;
+            }
+
             if ($found) {
                 if ($skip) {
-                    $this->SendDebug(__FUNCTION__, 'skip ident=' . $ident . ', value=' . $value . ' => no value', 0);
+                    $this->SendDebug(__FUNCTION__, 'skip name=' . $name . ', ident=' . $ident . ', value=' . $value . ' => no value', 0);
                 } else {
-                    $this->SendDebug(__FUNCTION__, 'use ident=' . $ident . ', value=' . $value, 0);
+                    $this->SendDebug(__FUNCTION__, 'use name=' . $name . ', ident=' . $ident . ', value=' . $value, 0);
                 }
             } else {
-                $this->SendDebug(__FUNCTION__, 'ignore ident=' . $ident . ', value=' . $value, 0);
+                $this->SendDebug(__FUNCTION__, 'ignore name=' . $name . ', value=' . $value, 0);
             }
         }
 
         $this->SetValue('LastUpdate', time());
     }
 }
-
-/*
-{
-"modultyp":"PowrPilot",
-"vars":[
-    {"name":"0","homematic_name":"pp_counterIP","desc":"ip des powrpilots","type":"string","unit":"","value":"192.168.178.89"},
-    {"name":"11","homematic_name":"pp_kwh_bezug","desc":"kwh_bezug","type":"number","unit":"KWh","value":1732.000},
-    {"name":"12","homematic_name":"pp_kw_bezug","desc":"kw_bezug","type":"number","unit":"KW","value":0.000},
-    {"name":"13","homematic_name":"pp_kwh_abgabe","desc":"kwh_abgabe","type":"number","unit":"KWh","value":207.000},
-    {"name":"14","homematic_name":"pp_kw_abgabe","desc":"kw_abgabe","type":"number","unit":"KW","value":0.000},
-    {"name":"15","homematic_name":"pp_d0_status","desc":"d0_status","type":"boolean","unit":" ","value":false}
-],
-"Systeminfo":{"MAC-Adresse":"58:bf:25:d9:d3:8d","Homematic_CCU_ip":"192.168.178.72","WLAN_ssid":"thermaqua","WLAN_Signal_dBm":"-70","sec_seit_reset":"73411","zeitpunkt":"2023.02.08 /14h01","firmware":"powrpilot_17"}}
- */

@@ -6,7 +6,13 @@
 			"__elements__": "",
 
 			"__variables__": "",
-
+			"Electricity delivery": "Abgabe von Strom",
+			"Purchase of electricity": "Bezug von Strom",
+			"Energy purchase": "Energie Bezug",
+			"Power purchase": "Leistung Bezug",
+			"Energy delivery": "Energie Abgabe",
+			"Power delivery": "Leistung Abgabe",
+			"Switching output": "Schaltausgang",
 			"Last measurement": "letzte Messung",
 			"Uptime": "Uptime",
 			"wifi-signal": "Wifi-Signal",

@@ -40,5 +40,11 @@ trait PowrPilotLocalLib
 
         $this->CreateVarProfile('PowrPilot.KWh', VARIABLETYPE_FLOAT, ' KWh', 0, 0, 0, 1, '', [], $reInstall);
         $this->CreateVarProfile('PowrPilot.KW', VARIABLETYPE_FLOAT, ' KW', 0, 0, 0, 1, '', [], $reInstall);
+
+        $associations = [
+            ['Wert' => false, 'Name' => $this->Translate('Off'), 'Farbe' => -1],
+            ['Wert' => true, 'Name' => $this->Translate('On'), 'Farbe' => -1],
+        ];
+        $this->CreateVarProfile('PowrPilot.Switch', VARIABLETYPE_BOOLEAN, '', 0, 0, 0, 0, '', $associations, $reInstall);
     }
 }

@@ -1,6 +1,10 @@
 {
 	"translations": {
 		"de": {
+			"__variableprofile。_": "PowrPilot.Switch",
+			"On": "Ein",
+			"Off": "Aus",
+
 			"__end__": ""
 		}
 	}
