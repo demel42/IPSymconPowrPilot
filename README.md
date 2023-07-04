@@ -132,6 +132,7 @@ GUIDs
 ## 7. Versions-Historie
 
 - 1.1 @ 04.07.2023 14:44
+  - Fix: README korrigiert (fehlende Images)
   - Vorbereitung auf IPS 7 / PHP 8.2
   - update submodule CommonStubs
     - Absicherung bei Zugriff auf Objekte und Inhalte
