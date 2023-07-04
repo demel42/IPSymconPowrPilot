@@ -148,7 +148,7 @@ class PowrPilot extends IPSModule
     public function ReceiveData($msg)
     {
         $jmsg = json_decode($msg, true);
-        $data = utf8_decode($jmsg['Buffer']);
+        $data = $jmsg['Buffer'];
 
         switch ((int) $jmsg['Type']) {
             case 0: /* Data */
