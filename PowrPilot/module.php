@@ -10,20 +10,24 @@ class PowrPilot extends IPSModule
     use PowrPilot\StubsCommonLib;
     use PowrPilotLocalLib;
 
-    private $ModuleDir;
-
     public function __construct(string $InstanceID)
     {
         parent::__construct($InstanceID);
 
-        $this->ModuleDir = __DIR__;
+        $this->CommonContruct(__DIR__);
+    }
+
+    public function __destruct()
+    {
+        $this->CommonDestruct();
     }
 
     public function Create()
     {
         parent::Create();
 
-        $this->RegisterAttributeString('UpdateInfo', '');
+        $this->RegisterAttributeString('UpdateInfo', json_encode([]));
+        $this->RegisterAttributeString('ModuleStats', json_encode([]));
 
         $this->InstallVarProfiles(false);
 
