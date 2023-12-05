@@ -119,8 +119,8 @@ PowrPilot.sec,
 PowrPilot.Wifi
 
 * Float<br>
-PowrPilot.KW,
-PowrPilot.KWh,
+PowrPilot.kW,
+PowrPilot.kWh,
 
 ## 6. Anhang
 
@@ -130,6 +130,9 @@ GUIDs
   - PowrPilot: `{0003E135-D3AE-16BD-AA4B-753FACFC58A1}`
 
 ## 7. Versions-Historie
+
+- 1.3 @ 05.12.2023 15:23
+  - Fix: fehlerhafte Variablenprofile korrigiert
 
 - 1.2 @ 03.11.2023 11:06
   - Neu: Ermittlung von Speicherbedarf und Laufzeit (aktuell und für 31 Tage) und Anzeige im Panel "Information"

@@ -38,8 +38,8 @@ trait PowrPilotLocalLib
         $this->CreateVarProfile('PowrPilot.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity', [], $reInstall);
         $this->CreateVarProfile('PowrPilot.sec', VARIABLETYPE_INTEGER, ' s', 0, 0, 0, 0, 'Clock', [], $reInstall);
 
-        $this->CreateVarProfile('PowrPilot.KWh', VARIABLETYPE_FLOAT, ' KWh', 0, 0, 0, 1, '', [], $reInstall);
-        $this->CreateVarProfile('PowrPilot.KW', VARIABLETYPE_FLOAT, ' KW', 0, 0, 0, 1, '', [], $reInstall);
+        $this->CreateVarProfile('PowrPilot.kWh', VARIABLETYPE_FLOAT, ' kWh', 0, 0, 0, 1, '', [], $reInstall);
+        $this->CreateVarProfile('PowrPilot.kW', VARIABLETYPE_FLOAT, ' kW', 0, 0, 0, 1, '', [], $reInstall);
 
         $associations = [
             ['Wert' => false, 'Name' => $this->Translate('Off'), 'Farbe' => -1],

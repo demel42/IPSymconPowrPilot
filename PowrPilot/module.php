@@ -34,6 +34,32 @@ class PowrPilot extends IPSModule
         $this->RequireParent('{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}');
     }
 
+	    private function CheckModuleUpdate(array $oldInfo, array $newInfo)
+    {
+        $r = [];
+
+        if ($this->version2num($oldInfo) < $this->version2num('1.13')) {
+            $r[] = $this->Translate('Replace variableprofiles \'PowrPilot.KWh\' by \'PowrPilot.kWh\' and \'PowrPilot.KW\' by \'PowrPilot.kW\'');
+        }
+
+        return $r;
+    }
+
+    private function CompleteModuleUpdate(array $oldInfo, array $newInfo)
+    {
+        if ($this->version2num($oldInfo) < $this->version2num('1.13')) {
+            if (IPS_VariableProfileExists('PowrPilot.KWh')) {
+                IPS_DeleteVariableProfile('PowrPilot.KWh');
+            }
+            if (IPS_VariableProfileExists('PowrPilot.KW')) {
+                IPS_DeleteVariableProfile('PowrPilot.KW');
+            }
+            $this->InstallVarProfiles(false);
+        }
+
+        return '';
+    }
+
     public function ApplyChanges()
     {
         parent::ApplyChanges();
@@ -57,11 +83,11 @@ class PowrPilot extends IPSModule
 
         $vpos = 1;
 
-        $this->MaintainVariable('PurchasePower', $this->Translate('Energy purchase'), VARIABLETYPE_FLOAT, 'PowrPilot.KWh', $vpos++, true);
-        $this->MaintainVariable('PurchaseEnergy', $this->Translate('Power purchase'), VARIABLETYPE_FLOAT, 'PowrPilot.KW', $vpos++, true);
+        $this->MaintainVariable('PurchasePower', $this->Translate('Energy purchase'), VARIABLETYPE_FLOAT, 'PowrPilot.kWh', $vpos++, true);
+        $this->MaintainVariable('PurchaseEnergy', $this->Translate('Power purchase'), VARIABLETYPE_FLOAT, 'PowrPilot.kW', $vpos++, true);
 
-        $this->MaintainVariable('DeliveryPower', $this->Translate('Energy delivery'), VARIABLETYPE_FLOAT, 'PowrPilot.KWh', $vpos++, true);
-        $this->MaintainVariable('DeliveryEnergy', $this->Translate('Power delivery'), VARIABLETYPE_FLOAT, 'PowrPilot.KW', $vpos++, true);
+        $this->MaintainVariable('DeliveryPower', $this->Translate('Energy delivery'), VARIABLETYPE_FLOAT, 'PowrPilot.kWh', $vpos++, true);
+        $this->MaintainVariable('DeliveryEnergy', $this->Translate('Power delivery'), VARIABLETYPE_FLOAT, 'PowrPilot.kW', $vpos++, true);
 
         $this->MaintainVariable('Switch', $this->Translate('Switching output'), VARIABLETYPE_BOOLEAN, 'PowrPilot.Switch', $vpos++, true);
 

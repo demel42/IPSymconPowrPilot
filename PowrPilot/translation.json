@@ -3,6 +3,10 @@
 		"de": {
 			"PowrPilot": "PowrPilot",
 
+			"__function__": "CheckModuleUpdate",
+			"Replace variableprofiles 'PowrPilot.KWh' by 'PowrPilot.kWh' and 'PowrPilot.KW' by 'PowrPilot.kW'":
+				"Die Variablenprofile 'PowrPilot.KWh' durch 'PowrPilot.kWh' und 'PowrPilot.KW' durch 'PowrPilot.kW' ersetzen",
+
 			"__elements__": "",
 
 			"__variables__": "",
